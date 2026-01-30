@@ -1,0 +1,124 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "evalab"
+version = "0.1.0"
+description = "LLM Evaluation & Reliability Platform"
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.10"
+authors = [
+    {name = "LLM-EvalLab Team"}
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+keywords = ["llm", "evaluation", "rag", "nlp", "machine-learning"]
+
+dependencies = [
+    # Core
+    "pydantic>=2.0",
+    "sqlalchemy>=2.0",
+    "jinja2>=3.0",
+    "pyyaml>=6.0",
+    "typer[all]>=0.9.0",
+    "rich>=13.0",
+    
+    # API/Dashboard
+    "fastapi>=0.100.0",
+    "uvicorn[standard]>=0.22.0",
+    "streamlit>=1.28.0",
+    
+    # LLM Backends
+    "openai>=1.0",
+    "tiktoken>=0.5.0",
+    
+    # Retrieval
+    "rank-bm25>=0.2.2",
+    "faiss-cpu>=1.7.4",
+    "sentence-transformers>=2.2.0",
+    
+    # Evaluation
+    "bert-score>=0.3.13",
+    "numpy>=1.24.0",
+    "scipy>=1.10.0",
+    
+    # Utilities
+    "httpx>=0.24.0",
+    "aiofiles>=23.0.0",
+    "python-multipart>=0.0.6",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "pytest-asyncio>=0.21.0",
+    "pytest-cov>=4.0",
+    "ruff>=0.1.0",
+    "black>=23.0",
+    "mypy>=1.0",
+    "pre-commit>=3.0",
+]
+gpu = [
+    "vllm>=0.2.0",
+    "faiss-gpu>=1.7.4",
+]
+
+[project.scripts]
+evalab = "evalab.cli:app"
+
+[project.urls]
+Homepage = "https://github.com/llm-evallab/evalab"
+Documentation = "https://github.com/llm-evallab/evalab#readme"
+Repository = "https://github.com/llm-evallab/evalab"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["evalab*"]
+
+[tool.ruff]
+target-version = "py310"
+line-length = 100
+select = [
+    "E",      # pycodestyle errors
+    "W",      # pycodestyle warnings
+    "F",      # Pyflakes
+    "I",      # isort
+    "B",      # flake8-bugbear
+    "C4",     # flake8-comprehensions
+    "UP",     # pyupgrade
+]
+ignore = [
+    "E501",   # line too long (handled by black)
+    "B008",   # do not perform function calls in argument defaults
+    "C901",   # too complex
+]
+
+[tool.ruff.isort]
+known-first-party = ["evalab"]
+
+[tool.black]
+line-length = 100
+target-version = ["py310", "py311", "py312"]
+
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = true
+warn_unused_ignores = true
+disallow_untyped_defs = true
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+addopts = "-v --tb=short"

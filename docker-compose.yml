@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  evalab:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: evalab
+    ports:
+      - "8080:8080"   # FastAPI
+      - "8501:8501"   # Streamlit Dashboard
+    volumes:
+      - ./data:/app/data
+      - ./runs:/app/runs
+      - ./configs:/app/configs
+      - ./prompts:/app/prompts
+      - ./evalab.db:/app/evalab.db
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - DATABASE_URL=sqlite:///./evalab.db
+      - EVALAB_STORAGE_DIR=/app/runs
+      - EVALAB_DATA_DIR=/app/data
+      - LOG_LEVEL=INFO
+    command: evalab serve
+    restart: unless-stopped
+
+  # Optional: vLLM server for local GPU inference
+  vllm:
+    image: vllm/vllm-openai:latest
+    container_name: evalab-vllm
+    profiles:
+      - gpu
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    ports:
+      - "8000:8000"
+    volumes:
+      - ~/.cache/huggingface:/root/.cache/huggingface
+    environment:
+      - HF_TOKEN=${HF_TOKEN}
+    command: >
+      --model meta-llama/Meta-Llama-3.1-8B-Instruct
+      --tensor-parallel-size 1
+      --max-model-len 4096
+    restart: unless-stopped
+
+volumes:
+  data:
+  runs:
+  configs:

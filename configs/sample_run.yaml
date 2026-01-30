@@ -1,0 +1,64 @@
+# Sample LLM-EvalLab Run Configuration
+# This configuration runs a simple QA evaluation
+
+run_name: "sample_qa_evaluation"
+
+# Dataset configuration
+dataset:
+  path: "data/datasets/sample_qa.jsonl"
+  name: "sample_qa"
+  # max_examples: 10  # Uncomment to limit examples
+
+# Retrieval configuration (disabled for simple QA)
+retrieval:
+  enabled: false
+  # corpus_path: "data/corpus/sample_corpus.jsonl"
+  # chunking:
+  #   size: 512
+  #   overlap: 64
+  # retriever:
+  #   type: "hybrid"
+  #   bm25_weight: 0.4
+  #   dense_weight: 0.6
+  # top_k: 5
+
+# Generation configuration
+generation:
+  backend: "openai"  # openai | vllm
+  model: "gpt-4o-mini"
+  temperature: 0.2
+  max_tokens: 512
+  # seed: 42  # Uncomment for reproducibility
+
+# Prompt configuration
+prompt:
+  template_path: "prompts/qa_v1.jinja"
+  # system_message: "You are a helpful assistant."
+
+# Evaluation suites to run
+evaluation:
+  suites:
+    - "accuracy"
+    - "semantic"
+    - "cost_latency"
+  # faithfulness_threshold: 0.7
+  # judge_model: "gpt-4o-mini"
+
+# Attribution analysis (optional)
+attribution:
+  enabled: false
+  # probes:
+  #   - "gold_context"
+
+# Logging configuration
+logging:
+  save_traces: true
+  output_dir: "runs/"
+  log_level: "INFO"
+
+# Optional metadata
+notes: "Sample evaluation run for testing"
+tags:
+  - "sample"
+  - "qa"
+  - "test"

@@ -1,0 +1,34 @@
+You are a faithfulness evaluator. Your task is to assess whether a response is faithful to the provided source context.
+
+Source Context:
+{{ context }}
+
+Response to Evaluate:
+{{ response }}
+
+Instructions:
+1. Identify each distinct factual claim in the response
+2. For each claim, determine if it is:
+   - SUPPORTED: Directly stated or clearly implied by the context
+   - NOT_FOUND: Cannot be verified from the context (but not contradicted)
+   - CONTRADICTED: Directly contradicts information in the context
+
+3. Provide your evaluation as JSON:
+
+```json
+{
+    "claims": [
+        {
+            "claim": "The specific claim text",
+            "verdict": "SUPPORTED|NOT_FOUND|CONTRADICTED",
+            "evidence": "Quote from context or explanation"
+        }
+    ],
+    "supported_count": <number>,
+    "not_found_count": <number>,
+    "contradicted_count": <number>,
+    "faithfulness_score": <float 0-1, where 1 = fully faithful>
+}
+```
+
+Evaluation:
