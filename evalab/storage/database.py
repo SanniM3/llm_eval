@@ -87,7 +87,12 @@ def init_db(db_url: str | None = None, echo: bool = False) -> Engine:
     global _engine, _session_factory
 
     _engine = get_engine(db_url, echo)
-    _session_factory = sessionmaker(bind=_engine, autoflush=False, autocommit=False)
+    _session_factory = sessionmaker(
+        bind=_engine,
+        autoflush=False,
+        autocommit=False,
+        expire_on_commit=False,  # Prevent detached instance errors
+    )
 
     # Create all tables
     Base.metadata.create_all(_engine)
